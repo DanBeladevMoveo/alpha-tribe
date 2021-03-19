@@ -1,0 +1,10 @@
+export const ROOT_ROUTE = '/';
+export const HOME_ROUTE = '/home';
+export const ALPHA_TIME_ROUTE = '/alpha-time'
+// export const HOME_ROUTE = '/home';
+export const ABOUT_US_ROUTE = '/about';
+// export const DEBOUNCE_TIMEOUT_MS = 1000;
+// export const FAV_KEY = 'fav';
+// export const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+// export const REMOVED_FROM_FAVORITES = 'Removed from Favorites';
+// export const ADDED_TO_FAVORITES = 'Added to Favorites';
