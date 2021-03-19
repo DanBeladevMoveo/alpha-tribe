@@ -1,7 +1,8 @@
 import { usersEcho } from "./helpers/echo";
 import { userCharlie } from "./helpers/charlie";
 import "./App.css";
-import { useState } from "react";
+import firebase from "firebase";
+import { useState, useEffect } from "react";
 
 function App() {
   const [charlieInput, setCharlieInput] = useState("");
@@ -9,6 +10,24 @@ function App() {
   const [echoMembers, setEchoMembers] = useState(usersEcho);
   const [charlieMembers, setCharlieMembers] = useState(userCharlie);
   const [couples, setCouples] = useState([]);
+  const db = firebase.firestore();
+
+  useEffect(async () => {
+    db.collection("users")
+      .get()
+      .then((querySnapshot) => {
+        const users = [];
+        querySnapshot.forEach((doc) => {
+          console.log(doc.data());
+          const { member } = doc.data();
+          const {id} = doc;
+          users.push({id,member});
+        });
+        setCharlieMembers(users);
+      })
+      .catch((err) => console.log("err:", err));
+  }, []);
+
   const addMemberEcho = (member) => {
     console.log("addding ", member);
     const newEchoMemebers = [...echoMembers, member];
@@ -17,10 +36,13 @@ function App() {
     setEchoInput("");
   };
 
-  const addMemberCharlie = (member) => {
-    console.log("addding ", member);
+  const addMemberCharlie = async (member) => {
     const newCharlieMemebers = [...charlieMembers, member];
-    console.log(("new", newCharlieMemebers));
+    db.collection("users")
+      .doc()
+      .set({ member })
+      .then((res) => console.log("success adding user to firebase"))
+      .catch((err) => console.log("failed adding: ", member, err));
     setCharlieMembers(newCharlieMemebers);
     setCharlieInput("");
   };
@@ -102,14 +124,14 @@ function App() {
           </div>
           <ul className="member-list">
             {echoMembers.map((user) => (
-              <li key={user} className= "member">
-                {user}
+              <li key={user} className="member">
                 <div
                   className="remove"
                   onClick={() => removeUser(user, echoMembers, "echo")}
                 >
                   -
                 </div>
+                {user}
               </li>
             ))}
           </ul>
@@ -133,8 +155,8 @@ function App() {
           </div>
           <ul className="member-list">
             {charlieMembers.map((user) => (
-              <li key={user} className= "member">
-                {user}
+              <li key={user.id} className="member">
+                {user.member}
                 <div
                   className="remove"
                   onClick={() => removeUser(user, charlieMembers, "charlie")}
@@ -147,7 +169,9 @@ function App() {
         </div>
       </div>
       <div className="result-container">
-        <buttton onClick={() => shuffle()} className="shuffle-btn">Shuffle</buttton>
+        <buttton onClick={() => shuffle()} className="shuffle-btn">
+          Shuffle
+        </buttton>
         <div className="result-list">
           <ul className="result-list">
             {couples.map((couple) => (
