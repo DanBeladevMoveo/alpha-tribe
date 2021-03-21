@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { React, useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -25,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
   textInput: {
     marginRight: "14px",
-    width: '50%',
+    width: "50%",
   },
 }));
 
@@ -36,22 +37,26 @@ const People = () => {
 
   const db = firebase.firestore();
 
-  useEffect(async () => {
-    db.collection("users")
-      .get()
-      .then((querySnapshot) => {
-        const users = [];
-        querySnapshot.forEach((doc) => {
-          const { user } = doc.data();
-          const { id } = doc;
-          users.push({ id, user });
-        });
-        console.log(users);
-        setMembers(users);
-      })
-      .catch((err) => console.log("err:", err));
-  }, []);
+  useEffect(() => {
+    async function fetchData() {
+      db.collection("users")
+        .get()
+        .then((querySnapshot) => {
+          const users = [];
+          querySnapshot.forEach((doc) => {
+            const { user } = doc.data();
+            const { id } = doc;
+            users.push({ id, user });
+          });
+          console.log(users);
+          setMembers(users);
+        })
+        .catch((err) => console.log("err:", err));
+    }
+      fetchData();
 
+
+  }, []);
 
   const addMember = async (user) => {
     db.collection("users")
@@ -63,14 +68,14 @@ const People = () => {
   };
 
   const addToFirebase = () => {
-      usersAlpha.forEach(user => {
-        db.collection("users")
+    usersAlpha.forEach((user) => {
+      db.collection("users")
         .doc()
         .set({ user })
         .then(() => console.log("success adding user to firebase"))
         .catch((err) => console.log("failed adding: ", user, err));
-      })
-  }
+    });
+  };
 
   const removeUser = (user) => {
     const newList = members.filter((member) => user.id !== member.id);
@@ -78,7 +83,7 @@ const People = () => {
     db.collection("users")
       .doc(user.id)
       .delete()
-      .then(() => console.log( user.user + " successfully removed"))
+      .then(() => console.log(user.user + " successfully removed"))
       .catch((err) => console.log("failed adding: ", user, err));
   };
 
@@ -107,12 +112,10 @@ const People = () => {
         <ul className="member-list">
           {members.map((user) => (
             <li key={user.id} className="member">
-              <div
-                className="remove"
-                onClick={() => removeUser(user)}>
+              <div className="remove" onClick={() => removeUser(user)}>
                 -
               </div>
-                {user.user}
+              {user.user}
             </li>
           ))}
         </ul>

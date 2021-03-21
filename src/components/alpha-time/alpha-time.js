@@ -1,19 +1,14 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { React, useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import firebase from "firebase";
 import usersAlpha from "../../helpers/alpha";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-}));
 
 const AlphaTime = () => {
   const [couples, setCouples] = useState([]);
   const db = firebase.firestore();
 
-  useEffect(async () => {
+  useEffect(() => {
+    async function fetchData(){
     db.collection("alpha-time")
       .get()
       .then((res) => {
@@ -30,6 +25,8 @@ const AlphaTime = () => {
         })
       .catch((err) => {
           console.error("failed get alpha time")});
+      }
+      fetchData();
   }, []);
 
 
