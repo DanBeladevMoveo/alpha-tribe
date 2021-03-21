@@ -1,5 +1,5 @@
 export const usersAlpha = [
-    //   "Matan Elimelech",
+      "Matan Elimelech",
       "Kenneth Dan Weinberg Waks",
       "Liat Agam",
       "Ben Cohen",

@@ -1,7 +1,7 @@
-import {React, useState, useEffect} from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { React, useEffect, useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import firebase from "firebase";
-import usersAlpha from '../../helpers/alpha';
+import usersAlpha from "../../helpers/alpha";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -13,6 +13,36 @@ const AlphaTime = () => {
   const [couples, setCouples] = useState([]);
   const db = firebase.firestore();
 
+  useEffect(async () => {
+    db.collection("alpha-time")
+      .get()
+      .then((res) => {
+         console.log("get alpha time successfuly", res);
+         const isEmpty = res.empty;
+         debugger;
+         if(!isEmpty){
+             debugger;
+             const current = res.docs[res.docs.length -1];
+             console.log(current.data());
+             const {alphaCouples} = current.data();
+             setCouples(alphaCouples);
+         }
+        })
+      .catch((err) => {
+          console.error("failed get alpha time")});
+  }, []);
+
+
+  const saveCouples = (alphaCouples) => {
+      console.log('going to save: ', alphaCouples);
+    db.collection("alpha-time")
+    .doc()
+    .set({alphaCouples})
+    .then((res) => {
+       console.log("update alpha time successfuly" + res)})
+    .catch((err) => {
+        console.error("failed set alpha time")});
+  }
 
   const formatDate = (d) => {
     let month = "" + (d.getMonth() + 1);
@@ -33,13 +63,12 @@ const AlphaTime = () => {
     return arr;
   };
 
-  const shuffle = () => {
-    console.log("here");
+  const Shuffle = () => {
     const alphaCouples = [];
     let alpha = usersAlpha;
     let date = new Date("03/17/2021");
     let formattedDate = formatDate(date);
-    while (alpha.length > 1) {
+    while (alpha.length > 0) {
       const randomIndexFirst = Math.floor(Math.random() * alpha.length);
       const firstUser = alpha[randomIndexFirst];
       alpha = removeItemOnce(alpha, firstUser);
@@ -51,25 +80,29 @@ const AlphaTime = () => {
         second: secondUser,
         date: formattedDate,
       };
-      let string = `${couple.first} - ${couple.second} - ${couple.date}`;
+      let string = couple.second ? 
+       `${couple.first} - ${couple.second} - ${couple.date}`
+       :
+       `${couple.first} - ${couple.date}`;
       alphaCouples.push(string);
       setCouples(alphaCouples);
       date.setDate(date.getDate() + 7);
       formattedDate = formatDate(date);
     }
+    saveCouples(alphaCouples);
   };
 
 
 return (
     <div className="container">
       <div className="result-container">
-        <buttton onClick={() => shuffle()} className="shuffle-btn">
+        <buttton onClick={() => Shuffle()} className="shuffle-btn">
           Shuffle
         </buttton>
         <div className="result-list">
           <ul className="result-list">
             {couples.map((couple) => (
-              <li className="member result-member">{couple}</li>
+              <li className="member result-member" key={couple.toString()}>{couple}</li>
             ))}
           </ul>
         </div>
@@ -79,4 +112,3 @@ return (
 };
 
 export default AlphaTime;
-

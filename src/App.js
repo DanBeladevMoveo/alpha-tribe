@@ -1,8 +1,5 @@
-import { usersEcho } from "./helpers/echo";
-import { userCharlie } from "./helpers/charlie";
 import "./App.css";
-import firebase from "firebase";
-import { useState, useEffect, Fragment } from "react";
+import { Fragment } from "react";
 import AppNavBar from "./components/header/AppNavBar";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box } from "@material-ui/core";
@@ -10,6 +7,7 @@ import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import { ROOT_ROUTE, HOME_ROUTE, ABOUT_US_ROUTE, ALPHA_TIME_ROUTE } from "./constants";
 import People from "./components/people/People";
 import AlphaTime from "./components/alpha-time/alpha-time";
+import About from "./components/about-us/about";
 
 const useStyles = makeStyles((theme) => ({
   appContent: {
@@ -37,7 +35,7 @@ function App() {
               <AlphaTime />
             </Route>
             <Route exact path={ABOUT_US_ROUTE}>
-              <People />
+              <About />
             </Route>
           </Switch>
         </Box>

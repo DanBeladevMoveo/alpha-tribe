@@ -1,6 +1,4 @@
-h1 {
-  text-align: center;
-}
+@import "~react-image-gallery/styles/css/image-gallery.css";
 
 .members-container {
   display: flex;
@@ -12,8 +10,15 @@ h1 {
   width: 40%;
 }
 
+#root {
+height: 100%;
+}
+
+html {
+height: 100%;
+}
 .member-list {
-  height: 300px;
+  height: 570px;
   flex-direction: column;
   flex-wrap: wrap;
   display: flex;
@@ -29,7 +34,7 @@ h1 {
 .member {
   display: flex;
   width: 100%;
-  margin: 4px;
+  margin: 8px;
   font-size: 17px;
   font-weight: 600;
 }
@@ -38,7 +43,7 @@ h1 {
 }
 
 .remove {
-  margin-left: 20px;
+  margin-right: 20px;
   color: red;
   border: 2px solid red;
   border-radius: 50%;
