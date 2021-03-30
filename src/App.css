@@ -118,7 +118,9 @@ height: 100%;
   color: green;
   font-weight: 600;
 }
-
+.alpha-title {
+  width: fit-content;
+}
 .alpha-title:hover {
   cursor: pointer;
 }
