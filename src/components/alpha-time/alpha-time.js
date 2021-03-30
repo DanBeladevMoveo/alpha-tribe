@@ -31,7 +31,7 @@ const AlphaTime = () => {
       fetchData();
   }, []);
 
-  
+
   const saveCouples = (alphaCouples) => {
       console.log('going to save: ', alphaCouples);
     db.collection("alpha-time")
@@ -64,7 +64,7 @@ const AlphaTime = () => {
 
   const Shuffle = () => {
     const alphaCouples = [];
-    let alpha = usersAlpha;
+    let alpha = [...usersAlpha];
     let date = new Date(startDate);
     let formattedDate = formatDate(date);
     while (alpha.length > 0) {
@@ -75,8 +75,8 @@ const AlphaTime = () => {
       const secondUser = alpha[randomIndexSecond];
       alpha = removeItemOnce(alpha, secondUser);
       let couple = {
-        first: firstUser,
-        second: secondUser,
+        first: firstUser?.name,
+        second: secondUser?.name,
         date: formattedDate,
       };
       let string = couple.second
