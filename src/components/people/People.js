@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { TextField, Button } from "@material-ui/core/";
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 const People = () => {
   const classes = useStyles();
   const [input, setInput] = useState("");
-  const [members, setMembers] = useState(usersAlpha);
+  const [members, setMembers] = useState([]);
 
   const db = firebase.firestore();
 
@@ -62,7 +62,7 @@ const People = () => {
     db.collection("users")
       .doc()
       .set({ user })
-      .then((res) => console.log("success adding user to firebase"))
+      .then(() => console.log("success adding user to firebase"))
       .catch((err) => console.log("failed adding: ", user, err));
     setInput("");
   };
@@ -112,14 +112,18 @@ const People = () => {
       </Button>
       <div className="team-container">
         <ul className="member-list">
-          {members.map((user) => (
-            <li key={user.id} className="member">
+          {members && members.map((member) => (
+            <li key={member.id} className="member">
+              <Fragment>
               <div className="remove" onClick={() => {  
-                if(window.confirm('Are you sure you wish to remove '+ user.user + '?')) removeUser(user)
-                }}>
+                if(window.confirm('Are you sure you wish to remove '+ member.user.name + '?')) removeUser(member)
+              }}>
                 -
               </div>
-              {user.user}
+                {member.user.name}
+                <br></br>
+                <span className="team">{member.user.team}</span>
+              </Fragment>
             </li>
           ))}
         </ul>
