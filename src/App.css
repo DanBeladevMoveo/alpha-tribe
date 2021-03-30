@@ -100,3 +100,21 @@ height: 100%;
   padding: 20px 40px;
   margin-top: 20px;
 }
+
+.btn-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.date-container {
+  width: 300px;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.date-text {
+  font-size: 18px;
+  color: green;
+  font-weight: 600;
+}

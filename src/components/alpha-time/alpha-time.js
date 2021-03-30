@@ -2,34 +2,36 @@
 import { React, useEffect, useState } from "react";
 import firebase from "firebase";
 import usersAlpha from "../../helpers/alpha";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const AlphaTime = () => {
   const [couples, setCouples] = useState([]);
+  const [startDate, setStartDate] = useState(new Date());
   const db = firebase.firestore();
 
   useEffect(() => {
-    async function fetchData(){
+    async function fetchData() {
     db.collection("alpha-time")
       .get()
       .then((res) => {
          console.log("get alpha time successfuly", res);
          const isEmpty = res.empty;
-         debugger;
-         if(!isEmpty){
-             debugger;
-             const current = res.docs[res.docs.length -1];
+          if (!isEmpty) {
+            const current = res.docs[res.docs.length - 1];
              console.log(current.data());
-             const {alphaCouples} = current.data();
+            const { alphaCouples } = current.data();
              setCouples(alphaCouples);
          }
         })
       .catch((err) => {
-          console.error("failed get alpha time")});
+          console.error("failed get alpha time");
+        });
       }
       fetchData();
   }, []);
 
-
+  
   const saveCouples = (alphaCouples) => {
       console.log('going to save: ', alphaCouples);
     db.collection("alpha-time")
@@ -63,7 +65,7 @@ const AlphaTime = () => {
   const Shuffle = () => {
     const alphaCouples = [];
     let alpha = usersAlpha;
-    let date = new Date("03/17/2021");
+    let date = new Date(startDate);
     let formattedDate = formatDate(date);
     while (alpha.length > 0) {
       const randomIndexFirst = Math.floor(Math.random() * alpha.length);
@@ -77,10 +79,9 @@ const AlphaTime = () => {
         second: secondUser,
         date: formattedDate,
       };
-      let string = couple.second ? 
-       `${couple.first} - ${couple.second} - ${couple.date}`
-       :
-       `${couple.first} - ${couple.date}`;
+      let string = couple.second
+        ? `${couple.first} - ${couple.second} - ${couple.date}`
+        : `${couple.first} - ${couple.date}`;
       alphaCouples.push(string);
       setCouples(alphaCouples);
       date.setDate(date.getDate() + 7);
@@ -89,17 +90,27 @@ const AlphaTime = () => {
     saveCouples(alphaCouples);
   };
 
-
 return (
     <div className="container">
       <div className="result-container">
+        <div className="btn-container">
         <buttton onClick={() => Shuffle()} className="shuffle-btn">
           Shuffle
         </buttton>
+          <div className="date-container">
+            <span className="date-text">Start Date</span>
+            <DatePicker
+              selected={startDate}
+              onChange={(date) => setStartDate(date)}
+            />
+          </div>
+        </div>
         <div className="result-list">
           <ul className="result-list">
             {couples.map((couple) => (
-              <li className="member result-member" key={couple.toString()}>{couple}</li>
+              <li className="member result-member" key={couple.toString()}>
+                {couple}
+              </li>
             ))}
           </ul>
         </div>
