@@ -89,7 +89,9 @@ const People = () => {
 
   return (
     <div className="container">
-      <h1 onClick={addToFirebase}>Alpha Stars</h1>
+      <h1 className="alpha-title" onClick={()=> { 
+        if(window.confirm('Are you sure you wish to add all users to list?')) addToFirebase()
+        }}>Alpha Stars</h1>
       <TextField
         id="outlined-search"
         className={classes.textInput}
@@ -112,7 +114,9 @@ const People = () => {
         <ul className="member-list">
           {members.map((user) => (
             <li key={user.id} className="member">
-              <div className="remove" onClick={() => removeUser(user)}>
+              <div className="remove" onClick={() => {  
+                if(window.confirm('Are you sure you wish to remove '+ user.user + '?')) removeUser(user)
+                }}>
                 -
               </div>
               {user.user}
