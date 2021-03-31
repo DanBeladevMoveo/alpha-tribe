@@ -58,6 +58,29 @@ const People = () => {
 
   }, []);
 
+  const setColor = (member) => {
+    let color = '';
+    switch (member.user.team) {
+      case 'Charlie':
+        color = 'rebeccapurple';
+        break;
+      case 'Hotel':
+        color = 'red'
+        break;
+      case 'Echo':
+        color = 'orange'
+        break;
+      case 'Alpha':
+          color = 'grey'
+        break;
+      default:
+        color = 'rebeccapurple';
+        break;
+    }
+
+    return color;
+  }
+
   const addMember = async (user) => {
     db.collection("users")
       .doc()
@@ -122,7 +145,7 @@ const People = () => {
               </div>
                 {member.user.name}
                 <br></br>
-                <span className="team">{member.user.team}</span>
+                <span className="team" style={{color: setColor(member) }}>{member.user.team}</span>
               </Fragment>
             </li>
           ))}
