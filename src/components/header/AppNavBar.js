@@ -1,10 +1,9 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { useHistory } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { NavLink } from "react-router-dom";
+import { AppBar, Toolbar, Typography, Button } from "@material-ui/core";
 
-import { HOME_ROUTE, ABOUT_US_ROUTE, ALPHA_TIME_ROUTE } from '../../constants';
-
+import { HOME_ROUTE, ABOUT_US_ROUTE, ALPHA_TIME_ROUTE } from "../../constants";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -14,35 +13,51 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   appBar: {
-    backgroundColor: 'black',
+    backgroundColor: "black",
   },
 }));
 
 const AppNavBar = () => {
   const classes = useStyles();
-  const history = useHistory();
-
-  const onButtonClick = (path) => {
-    history.push(path);
-  };
 
   return (
     <div className={classes.root}>
-      <AppBar position='static' className={classes.appBar}>
+      <AppBar position="static" className={classes.appBar}>
         <Toolbar>
-          <Typography variant='h6' className={classes.title}>
-            Alpha
+          <Typography variant="h6" className={classes.title}>
+          <NavLink
+              to={HOME_ROUTE}
+              className="link"
+            >
+              Alpha
+            </NavLink>
           </Typography>
-          <Button color='inherit' onClick={() => onButtonClick(HOME_ROUTE)}>
-            People
+          <Button>
+            <NavLink
+              to={HOME_ROUTE}
+              className="link"
+              activeClassName="selected"
+            >
+              People
+            </NavLink>
           </Button>
-          <Button color='inherit' onClick={() => onButtonClick(ALPHA_TIME_ROUTE)}>
-            Alpha Time
+          <Button>
+            <NavLink
+              to={ALPHA_TIME_ROUTE}
+              className="link"
+              activeClassName="selected"
+            >
+              Alpha Time
+            </NavLink>
           </Button>
-          <Button
-            color='inherit'
-            onClick={() => onButtonClick(ABOUT_US_ROUTE)} >
-            About Us
+          <Button>
+            <NavLink
+              to={ABOUT_US_ROUTE}
+              className="link"
+              activeClassName="selected"
+            >
+              About Us
+            </NavLink>
           </Button>
         </Toolbar>
       </AppBar>
@@ -51,4 +66,3 @@ const AppNavBar = () => {
 };
 
 export default AppNavBar;
-

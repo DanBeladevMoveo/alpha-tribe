@@ -45,13 +45,7 @@ height: 100%;
 .remove {
   margin-right: 20px;
   color: red;
-  border: 2px solid red;
-  border-radius: 50%;
-  height: 20px;
-  width: 20px;
-  text-align: center;
-  display: flex;
-  justify-content: center;
+  width: 12px;
 }
 
 .remove:hover {
@@ -129,4 +123,11 @@ height: 100%;
   display: contents;
   font-size: 11px;
   color: rebeccapurple;
+}
+.link {
+  color: white;
+  text-decoration: none;
+}
+.selected {
+  color: orange
 }
