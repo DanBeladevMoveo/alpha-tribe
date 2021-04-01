@@ -139,7 +139,10 @@ const People = () => {
             <li key={member.id} className="member">
               <Fragment>
               <div className="remove" onClick={() => {  
-                if(window.confirm('Are you sure you wish to remove '+ member.user.name + '?')) removeUser(member)
+                if(window.confirm('Are you sure you wish to remove '+ member.user.name + '?')) {
+                  var return_value = prompt("Password:");
+                  if(return_value==="11") removeUser(member);
+                }
               }}>
                 <img alt="" src="https://upload.wikimedia.org/wikipedia/commons/d/de/OOjs_UI_icon_trash-destructive.svg"></img>
               </div>
