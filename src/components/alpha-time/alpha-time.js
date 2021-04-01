@@ -79,9 +79,9 @@ const AlphaTime = () => {
         second: secondUser?.name || null,
         date: formattedDate,
       };
-      let string = couple.second
-        ? `${couple.first} - ${couple.second} - ${couple.date}`
-        : `${couple.first} - ${couple.date}`;
+      // let string = couple.second
+      //   ? `${couple.first} - ${couple.second} - ${couple.date}`
+      //   : `${couple.first} - ${couple.date}`;
       alphaCouples.push(couple);
       setCouples(alphaCouples);
       date.setDate(date.getDate() + 7);
