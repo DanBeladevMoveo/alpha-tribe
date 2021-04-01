@@ -75,14 +75,14 @@ const AlphaTime = () => {
       const secondUser = alpha[randomIndexSecond];
       alpha = removeItemOnce(alpha, secondUser);
       let couple = {
-        first: firstUser?.name,
-        second: secondUser?.name,
+        first: firstUser?.name || null,
+        second: secondUser?.name || null,
         date: formattedDate,
       };
       let string = couple.second
         ? `${couple.first} - ${couple.second} - ${couple.date}`
         : `${couple.first} - ${couple.date}`;
-      alphaCouples.push(string);
+      alphaCouples.push(couple);
       setCouples(alphaCouples);
       date.setDate(date.getDate() + 7);
       formattedDate = formatDate(date);
@@ -107,9 +107,9 @@ return (
         </div>
         <div className="result-list">
           <ul className="result-list">
-            {couples.map((couple) => (
-              <li className="member result-member" key={couple.toString()}>
-                {couple}
+            {couples && couples.map((couple) => (
+              <li className="member result-member">
+                <input value={couple.first}/>+<input value={couple.second}/> = <input value={couple.date}/>
               </li>
             ))}
           </ul>
