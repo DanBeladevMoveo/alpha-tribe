@@ -114,7 +114,7 @@ const People = () => {
     <div className="container">
       <h1 className="alpha-title" onClick={()=> { 
         if(window.confirm('Are you sure you wish to add all users to list?')) addToFirebase()
-        }}>Alpha Stars develop</h1>
+        }}>Alpha Stars</h1>
       <TextField
         id="outlined-search"
         className={classes.textInput}
