@@ -1,13 +1,15 @@
   // Your web app's Firebase configuration
   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  // production
+
   export const firebaseConfig = {
-    apiKey: "AIzaSyARCwzEs4q7E5TDrIz3rfg-_UuW1r3GwCc",
-    authDomain: "alpha-tribe.firebaseapp.com",
-    projectId: "alpha-tribe",
-    storageBucket: "alpha-tribe.appspot.com",
-    messagingSenderId: "580597108089",
-    appId: "1:580597108089:web:86e78ba2c20d7b3fd6f3a8",
-    measurementId: "G-7SV80VNXP2"
+    apiKey: process.env.REACT_APP_apiKey,
+    authDomain: process.env.REACT_APP_authDomain,
+    projectId: process.env.REACT_APP_projectId,
+    storageBucket: process.env.REACT_APP_storageBucket,
+    messagingSenderId: process.env.REACT_APP_messagingSenderId,
+    appId: process.env.REACT_APP_appId,
+    measurementId: process.env.REACT_APP_measurementId
   };
 
 
