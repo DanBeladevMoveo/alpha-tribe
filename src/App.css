@@ -61,6 +61,7 @@ height: 100%;
   height: 50px;
   font-size: 17px;
   text-align: center;
+  margin: 0 15px;
 }
 
 .date-picker {
@@ -70,6 +71,7 @@ height: 100%;
   font-weight: bold;
   text-align: center;
   background: aliceblue;
+  cursor: pointer;
 }
 .add-input {
   width: 250px;
@@ -149,4 +151,12 @@ height: 100%;
 }
 .selected {
   color: orange
+}
+
+.MuiSvgIcon-root {
+  width: 50px !important;
+  height: 50px !important;
+  fill: lightgreen !important;
+  margin-left: 20px !important;
+  cursor: pointer !important;
 }
