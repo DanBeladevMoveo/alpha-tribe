@@ -135,7 +135,9 @@ const People = () => {
       </Button>
       <div className="team-container">
         <ul className="member-list">
-          {members && members.map((member) => (
+        
+          {members && members.sort((a, b) => a.user.team > b.user.team ? 1 : -1)
+          .map((member, i) => (
             <li key={member.id} className="member">
               <Fragment>
               <div className="remove" onClick={() => {  
