@@ -94,12 +94,13 @@ return (
     <div className="container">
       <div className="result-container">
         <div className="btn-container">
-        <buttton onClick={() => Shuffle()} className="shuffle-btn">
+        <button onClick={() => Shuffle()} className="shuffle-btn">
           Shuffle
-        </buttton>
+        </button>
           <div className="date-container">
             <span className="date-text">Start Date</span>
             <DatePicker
+              className="date-picker"
               selected={startDate}
               onChange={(date) => setStartDate(date)}
             />
@@ -108,8 +109,8 @@ return (
         <div className="result-list">
           <ul className="result-list">
             {couples && couples.map((couple) => (
-              <li className="member result-member">
-                <input value={couple.first}/>+<input value={couple.second}/> = <input value={couple.date}/>
+              <li key={couple.first} className="member result-member">
+                <input className="member-input" defaultValue={couple.first}/><span className="operator">+</span><input className="member-input" defaultValue={couple.second}/> <span className="operator">=</span><input className="member-input" defaultValue={couple.date}/>
               </li>
             ))}
           </ul>

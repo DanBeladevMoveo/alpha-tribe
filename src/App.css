@@ -52,6 +52,25 @@ height: 100%;
   cursor: pointer;
 }
 
+.operator {
+  align-self: center;
+  font-size: 24px;
+}
+
+.member-input {
+  height: 50px;
+  font-size: 17px;
+  text-align: center;
+}
+
+.date-picker {
+  height: 40px;
+  width: 220px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  background: aliceblue;
+}
 .add-input {
   width: 250px;
   height: 30px;
