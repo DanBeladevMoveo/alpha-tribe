@@ -7,7 +7,7 @@ const addUser = async (user) => {
     console.log("success adding user to firebase ", res);
     return res;
   } catch (error) {
-    return handleError(error);
+    return handleError(error, {});
   }
 };
 const getUsers = async () => {
@@ -23,7 +23,7 @@ const getUsers = async () => {
     console.log('users: ', users)
     return users;
   } catch (error) {
-    return handleError(error);
+    return handleError(error, []);
   }
 };
 
@@ -54,7 +54,7 @@ const getCollection = async (collectionName) => {
     const collection = await db.collection(collectionName);
     return collection;
   } catch (error) {
-    return handleError(error);
+    return handleError(error, {});
   }
 };
 
