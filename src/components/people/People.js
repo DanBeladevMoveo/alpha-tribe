@@ -3,10 +3,10 @@ import { React, useState, useEffect, Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { TextField, Button } from "@material-ui/core/";
-import firebase from "firebase";
 
 import { green } from "@material-ui/core/colors";
 import usersAlpha from "../../helpers/alpha";
+import { API } from "../../api/users/users";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,27 +35,18 @@ const People = () => {
   const [input, setInput] = useState("");
   const [members, setMembers] = useState([]);
 
-  const db = firebase.firestore();
 
   useEffect(() => {
     async function fetchData() {
-      db.collection("users")
-        .get()
-        .then((querySnapshot) => {
-          const users = [];
-          querySnapshot.forEach((doc) => {
-            const { user } = doc.data();
-            const { id } = doc;
-            users.push({ id, user });
-          });
-          console.log(users);
-          setMembers(users);
-        })
-        .catch((err) => console.log("err:", err));
+      try {
+        console.log('users alopha',usersAlpha)
+        const users = await API.getUsers();
+        setMembers(users);
+      } catch (error) {
+        console.error(error);
+      }
     }
       fetchData();
-
-
   }, []);
 
   const setColor = (member) => {
@@ -82,32 +73,32 @@ const People = () => {
   }
 
   const addMember = async (user) => {
-    db.collection("users")
-      .doc()
-      .set({ user })
-      .then(() => console.log("success adding user to firebase"))
-      .catch((err) => console.log("failed adding: ", user, err));
-    setInput("");
+    try {
+      const payload = {
+          name: user,
+          team: 'Charlie'
+      }
+      await API.addUser(payload);
+      // setMembers([...members, payload]);
+      setInput("");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const addToFirebase = () => {
-    usersAlpha.forEach((user) => {
-      db.collection("users")
-        .doc()
-        .set({ user })
-        .then(() => console.log("success adding user to firebase"))
-        .catch((err) => console.log("failed adding: ", user, err));
-    });
+  const addToFirebase = async () => {
+      await API.setUsers(usersAlpha);
   };
 
-  const removeUser = (user) => {
-    const newList = members.filter((member) => user.id !== member.id);
-    setMembers(newList);
-    db.collection("users")
-      .doc(user.id)
-      .delete()
-      .then(() => console.log(user.user + " successfully removed"))
-      .catch((err) => console.log("failed adding: ", user, err));
+  const removeUser = async (user) => {
+    try {
+      const newList = members.filter((member) => user.id !== member.id);
+      setMembers(newList);
+      const res = await API.removeUser(user);
+      console.log('res of removing: ',res);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
