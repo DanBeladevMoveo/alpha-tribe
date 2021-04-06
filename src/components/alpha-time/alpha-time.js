@@ -1,50 +1,41 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { React, useEffect, useState } from "react";
-import firebase from "firebase";
 import usersAlpha from "../../helpers/alpha";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import SaveIcon from '@material-ui/icons/Save';
+import SaveIcon from "@material-ui/icons/Save";
+import { AlphsTimeAPI } from "../../api/alpha-time/alpha-time";
 
 const AlphaTime = () => {
   const [couples, setCouples] = useState([]);
-  const [id, setID] = useState('');
+  const [id, setID] = useState("");
   const [startDate, setStartDate] = useState(new Date());
-  const db = firebase.firestore();
+
 
   useEffect(() => {
     async function fetchData() {
-    db.collection("alpha-time")
-      .get()
-      .then((res) => {
-         console.log("get alpha time successfuly", res);
-         const isEmpty = res.empty;
-          if (!isEmpty) {
-            const current = res.docs[res.docs.length - 1];
-            setID(current.id);
-            //  console.log('current:', current, ' currentdata: ',current.data());
-            const { alphaCouples } = current.data();
-             setCouples(alphaCouples);
-         }
-        })
-      .catch((err) => {
-          console.error("failed get alpha time");
-        });
+      try {
+        const currentAlphaTime = await AlphsTimeAPI.getCurrentAlphaTime();
+        console.log("get alpha time successfuly", currentAlphaTime);
+        const isEmpty = currentAlphaTime.empty;
+        if (!isEmpty) {
+          const current =
+            currentAlphaTime.docs[currentAlphaTime.docs.length - 1];
+          setID(current.id);
+          const { alphaCouples } = current.data();
+          setCouples(alphaCouples);
+        }
+      } catch (error) {
+        console.error(error);
       }
-      fetchData();
+    }
+    fetchData();
   }, []);
 
-
-  const saveCouples = (alphaCouples) => {
-      console.log('going to save: ', alphaCouples);
-    db.collection("alpha-time")
-    .doc()
-    .set({alphaCouples})
-    .then((res) => {
-       console.log("update alpha time successfuly" + res)})
-    .catch((err) => {
-        console.error("failed set alpha time")});
-  }
+  const saveCouples = async (alphaCouples) => {
+    console.log("going to save: ", alphaCouples);
+    await AlphsTimeAPI.saveCouples(alphaCouples);
+  };
 
   const formatDate = (d) => {
     let month = "" + (d.getMonth() + 1);
@@ -65,37 +56,57 @@ const AlphaTime = () => {
     return arr;
   };
 
-  const saveWeek = (couple, i) => {
+  const getPayload = (index) => {
+    const firstValue = document.getElementById("first" + index).value;
+    const secondValue = document.getElementById("second" + index).value;
+    const dateValue = document.getElementById("date" + index).value;
 
-    if(isSaveIconDisabled(couple,i)) return
+    let payload = {
+      first: firstValue,
+      second: secondValue,
+      date: dateValue,
+    };
+    return payload;
+  };
 
-    const firstValue = document.getElementById('first' + i).value;
-    const secondValue = document.getElementById('second' + i).value;
-    const dateValue = document.getElementById('date' + i).value;
+  const saveWeek = async (couple, i) => {
+    if (isSaveIconDisabled(couple, i)) return;
 
-    const payload = {
-      first: firstValue, second: secondValue, date: dateValue 
-    }
+    let payload = getPayload(i);
+
     const newArray = [...couples];
     newArray[i] = payload;
-    db.collection("alpha-time")
-    .doc(id)
-    .set({alphaCouples: newArray})
-    .then((res) => {
-       console.log("update couple successfuly", res);
-        setCouples(newArray);
-        alert('updated successfully');
-      })
-    .catch((err) => {
-        console.error("failed get alpha time");
-      });
+    const res = await AlphsTimeAPI.setCurrentAlphaTime(id, newArray);
+    console.log("res: ", res);
+    setCouples(newArray);
+    alert("updated successfully");
   };
 
   const isSaveIconDisabled = (couple, i) => {
-    const firstValue = document.getElementById('first' + i)?.value;
-    const secondValue = document.getElementById('second' + i)?.value;
-    const dateValue = document.getElementById('date' + i)?.value;
-    return (couple.first === firstValue && couple.second === secondValue && couple.date === dateValue)
+    const firstValue = document.getElementById("first" + i)?.value;
+    const secondValue = document.getElementById("second" + i)?.value;
+    const dateValue = document.getElementById("date" + i)?.value;
+    return (
+      couple.first === firstValue &&
+      couple.second === secondValue &&
+      couple.date === dateValue
+    );
+  };
+
+  const getCouple = () => {
+    const randomIndexFirst = Math.floor(Math.random() * alpha.length);
+    const firstUser = alpha[randomIndexFirst];
+    alpha = removeItemOnce(alpha, firstUser);
+    const randomIndexSecond = Math.floor(Math.random() * alpha.length);
+    const secondUser = alpha[randomIndexSecond];
+    alpha = removeItemOnce(alpha, secondUser);
+    let couple = {
+      first: firstUser?.name || null,
+      second: secondUser?.name || null,
+      date: formattedDate,
+    };
+
+    return couple;
   }
 
   const Shuffle = () => {
@@ -104,17 +115,7 @@ const AlphaTime = () => {
     let date = new Date(startDate);
     let formattedDate = formatDate(date);
     while (alpha.length > 0) {
-      const randomIndexFirst = Math.floor(Math.random() * alpha.length);
-      const firstUser = alpha[randomIndexFirst];
-      alpha = removeItemOnce(alpha, firstUser);
-      const randomIndexSecond = Math.floor(Math.random() * alpha.length);
-      const secondUser = alpha[randomIndexSecond];
-      alpha = removeItemOnce(alpha, secondUser);
-      let couple = {
-        first: firstUser?.name || null,
-        second: secondUser?.name || null,
-        date: formattedDate,
-      };
+      const couple = getCouple(alpha);
       alphaCouples.push(couple);
       date.setDate(date.getDate() + 7);
       formattedDate = formatDate(date);
@@ -123,13 +124,13 @@ const AlphaTime = () => {
     saveCouples(alphaCouples);
   };
 
-return (
+  return (
     <div className="container">
       <div className="result-container">
         <div className="btn-container">
-        <button onClick={() => Shuffle()} className="shuffle-btn">
-          Shuffle
-        </button>
+          <button onClick={() => Shuffle()} className="shuffle-btn">
+            Shuffle
+          </button>
           <div className="date-container">
             <span className="date-text">Start Date</span>
             <DatePicker
@@ -141,12 +142,32 @@ return (
         </div>
         <div className="result-list">
           <ul className="result-list">
-            {couples && couples.map((couple,i) => (
-              <li key={couple.first} className="member result-member">
-                <input id={ `first${i}`} className="member-input" defaultValue={couple.first}/><span className="operator">+</span><input id={`second${i}`} className="member-input" defaultValue={couple.second}/> <span className="operator">=</span><input id={`date${i}`} className="member-input" defaultValue={couple.date}/>
-                <SaveIcon className="save" onClick = {() => saveWeek(couple,i)}></SaveIcon>
-              </li>
-            ))}
+            {couples &&
+              couples.map((couple, i) => (
+                <li key={couple.first} className="member result-member">
+                  <input
+                    id={`first${i}`}
+                    className="member-input"
+                    defaultValue={couple.first}
+                  />
+                  <span className="operator">+</span>
+                  <input
+                    id={`second${i}`}
+                    className="member-input"
+                    defaultValue={couple.second}
+                  />{" "}
+                  <span className="operator">=</span>
+                  <input
+                    id={`date${i}`}
+                    className="member-input"
+                    defaultValue={couple.date}
+                  />
+                  <SaveIcon
+                    className="save"
+                    onClick={() => saveWeek(couple, i)}
+                  ></SaveIcon>
+                </li>
+              ))}
           </ul>
         </div>
       </div>

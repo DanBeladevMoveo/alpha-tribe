@@ -6,7 +6,7 @@ import { TextField, Button } from "@material-ui/core/";
 
 import { green } from "@material-ui/core/colors";
 import usersAlpha from "../../helpers/alpha";
-import { API } from "../../api/users/users";
+import { UsersAPI } from "../../api/users/users";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,7 +40,7 @@ const People = () => {
     async function fetchData() {
       try {
         console.log('users alopha',usersAlpha)
-        const users = await API.getUsers();
+        const users = await UsersAPI.getUsers();
         setMembers(users);
       } catch (error) {
         console.error(error);
@@ -78,7 +78,7 @@ const People = () => {
           name: user,
           team: 'Charlie'
       }
-      await API.addUser(payload);
+      await UsersAPI.addUser(payload);
       // setMembers([...members, payload]);
       setInput("");
     } catch (error) {
@@ -87,14 +87,14 @@ const People = () => {
   };
 
   const addToFirebase = async () => {
-      await API.setUsers(usersAlpha);
+      await UsersAPI.setUsers(usersAlpha);
   };
 
   const removeUser = async (user) => {
     try {
       const newList = members.filter((member) => user.id !== member.id);
       setMembers(newList);
-      const res = await API.removeUser(user);
+      const res = await UsersAPI.removeUser(user);
       console.log('res of removing: ',res);
     } catch (error) {
       console.error(error);
