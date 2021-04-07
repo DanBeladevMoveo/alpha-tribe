@@ -73,6 +73,10 @@ height: 100%;
   background: aliceblue;
   cursor: pointer;
 }
+
+.done {
+  background: grey;
+}
 .add-input {
   width: 250px;
   height: 30px;

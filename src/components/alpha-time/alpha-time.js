@@ -9,6 +9,7 @@ import { AlphsTimeAPI } from "../../api/alpha-time/alpha-time";
 const AlphaTime = () => {
   const [couples, setCouples] = useState([]);
   const [id, setID] = useState("");
+  const [editMode, setEditMode] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
 
 
@@ -82,6 +83,13 @@ const AlphaTime = () => {
     alert("updated successfully");
   };
 
+  const Edit = () => {
+      var return_value = prompt("Password:");
+      if(return_value==="11"){
+        setEditMode(!editMode);
+      } 
+  }
+
   const isSaveIconDisabled = (couple, i) => {
     const firstValue = document.getElementById("first" + i)?.value;
     const secondValue = document.getElementById("second" + i)?.value;
@@ -93,7 +101,7 @@ const AlphaTime = () => {
     );
   };
 
-  const getCouple = () => {
+  const getCouple = (alpha, formattedDate) => {
     const randomIndexFirst = Math.floor(Math.random() * alpha.length);
     const firstUser = alpha[randomIndexFirst];
     alpha = removeItemOnce(alpha, firstUser);
@@ -115,7 +123,7 @@ const AlphaTime = () => {
     let date = new Date(startDate);
     let formattedDate = formatDate(date);
     while (alpha.length > 0) {
-      const couple = getCouple(alpha);
+      const couple = getCouple(alpha, formattedDate);
       alphaCouples.push(couple);
       date.setDate(date.getDate() + 7);
       formattedDate = formatDate(date);
@@ -124,11 +132,18 @@ const AlphaTime = () => {
     saveCouples(alphaCouples);
   };
 
+  const dateOver = (date) => {
+    return new Date(date) < new Date() 
+  }
+
   return (
     <div className="container">
       <div className="result-container">
-        <div className="btn-container">
-          <button onClick={() => Shuffle()} className="shuffle-btn">
+          {!editMode && <button onClick={() => Edit()} className="shuffle-btn">
+            Edit
+          </button>}
+          {editMode && <div className="btn-container">
+            <button onClick={() => Shuffle()} className="shuffle-btn">
             Shuffle
           </button>
           <div className="date-container">
@@ -139,7 +154,7 @@ const AlphaTime = () => {
               onChange={(date) => setStartDate(date)}
             />
           </div>
-        </div>
+        </div>}
         <div className="result-list">
           <ul className="result-list">
             {couples &&
@@ -147,25 +162,25 @@ const AlphaTime = () => {
                 <li key={couple.first} className="member result-member">
                   <input
                     id={`first${i}`}
-                    className="member-input"
+                    className={dateOver(couple.date) ?'member-input done' : 'member-input'}
                     defaultValue={couple.first}
                   />
                   <span className="operator">+</span>
                   <input
                     id={`second${i}`}
-                    className="member-input"
+                    className={dateOver(couple.date) ?'member-input done' : 'member-input'}
                     defaultValue={couple.second}
                   />{" "}
                   <span className="operator">=</span>
                   <input
                     id={`date${i}`}
-                    className="member-input"
+                    className={dateOver(couple.date) ?'member-input done' : 'member-input'}
                     defaultValue={couple.date}
                   />
-                  <SaveIcon
+                  {editMode && <SaveIcon
                     className="save"
                     onClick={() => saveWeek(couple, i)}
-                  ></SaveIcon>
+                  ></SaveIcon>}
                 </li>
               ))}
           </ul>
