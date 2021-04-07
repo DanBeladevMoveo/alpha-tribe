@@ -15,6 +15,7 @@ import { green } from "@material-ui/core/colors";
 import usersAlpha from "../../helpers/alpha";
 import { UsersAPI } from "../../api/users/users";
 import { TEAMS } from "../../constants";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,7 +62,7 @@ const People = () => {
   const [members, setMembers] = useState([]);
   const [team, setTeam] = useState("");
   const [selectedDate, setSelectedDate] = useState(
-    new Date("2014-08-18T21:11:54")
+    moment().toDate()
   );
 
   const handleDateChange = (date) => {
@@ -108,11 +109,18 @@ const People = () => {
     return color;
   };
 
-  const addMember = async (user) => {
+  const addMember = async () => {
+    debugger
+    const check = moment(selectedDate, 'YYYY/MM/DD')
+    const year = check.format('YYYY');
+    const month = check.format('M');
+    const day = check.format('D');
+    const dateString = `${day}/${month}/${year}`;
     try {
       const payload = {
-        name: user,
-        team: "Charlie",
+        name: input,
+        team: team,
+        date: dateString
       };
       await UsersAPI.addUser(payload);
       // setMembers([...members, payload]);
@@ -166,8 +174,8 @@ const People = () => {
             value={team}
             onChange={handleChange}
           >
-            {TEAMS.map((team) => (
-              <MenuItem value={team}>{team}</MenuItem>
+            {TEAMS.map((team,i) => (
+              <MenuItem key={i} value={team}>{team}</MenuItem>
             ))}
           </Select>
         </FormControl>
@@ -185,7 +193,7 @@ const People = () => {
           color="primary"
           className={classes.buttton}
           disabled={input === "" || team === ""}
-          onClick={() => addMember(input)}
+          onClick={() => addMember()}
         >
           ADD
         </Button>

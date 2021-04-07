@@ -2,12 +2,12 @@ import APIUtils from "../APIUtils";
 
 const addUser = async (user) => {
   try {
-    const collection = await APIUtils.APIUtils.getCollection("users");
+    const collection = await APIUtils.getCollection("users");
     const res = await collection.doc().set({ user: user });
     console.log("success adding user to firebase ", res);
     return res;
   } catch (error) {
-    return APIUtils.APIUtils.handleError(error, {});
+    return APIUtils.handleError(error, {});
   }
 };
 const getUsers = async () => {
