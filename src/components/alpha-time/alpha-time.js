@@ -5,6 +5,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import SaveIcon from "@material-ui/icons/Save";
 import { AlphsTimeAPI } from "../../api/alpha-time/alpha-time";
+import UsersAPI from "../../api/users/users";
 
 const AlphaTime = () => {
   const [couples, setCouples] = useState([]);
@@ -117,9 +118,12 @@ const AlphaTime = () => {
     return couple;
   }
 
-  const Shuffle = () => {
+  const Shuffle = async () => {
     const alphaCouples = [];
-    let alpha = [...usersAlpha];
+    let usersAlphaPicker = await UsersAPI.getUsers();
+    usersAlphaPicker = usersAlphaPicker.map(user => user.user)
+    // let alpha = [...usersAlpha];
+    let alpha = [...usersAlphaPicker]
     let date = new Date(startDate);
     let formattedDate = formatDate(date);
     while (alpha.length > 0) {
